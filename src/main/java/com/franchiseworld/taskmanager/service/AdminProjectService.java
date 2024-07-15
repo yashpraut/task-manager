@@ -6,14 +6,15 @@ import java.util.List;
 
 public interface AdminProjectService {
 
-
-
-    public Projects saveProjects(Projects projects);
+    public Projects saveProjects(Projects projects,int id);
 
     public Projects updateProjects(Projects projects,int id);
 
     public Projects getProjects(int id);
 
     public List<Projects> getAllProject();
+
+    public void  deleteProjectById(int id);
+
 
 }

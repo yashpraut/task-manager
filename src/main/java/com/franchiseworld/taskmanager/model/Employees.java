@@ -1,8 +1,9 @@
 package com.franchiseworld.taskmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
+import java.util.List;
 
 
 @Entity(name = "employees")
@@ -56,12 +57,39 @@ public class Employees {
     @Column(name = "UpdatedAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
     private LocalDateTime updatedAt;
 
+    private int flag;
+
+
+
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "employees")
+    @JsonManagedReference(value="employees-tasks")
+    private List<Tasks> tasks;
+
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "employeeID")
+    @JsonManagedReference(value = "employess-assignment")
+    private List<Assignment> assignments;
+
+
+    @OneToOne(mappedBy = "employees")
+    @JsonManagedReference(value = "emp-salary")
+    private Salary salary;
+
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "employees")
+    @JsonManagedReference(value = "emp-qualifications")
+    private List<Qualifications> qualifications;
+
+
     // Default constructor
     public Employees() {
     }
 
     // Constructor with all fields
-    public Employees(int employeeID, String firstName, String middleName, String lastName, String email, String userName, String password, String position, String profilePicture, String contactNo, String address, String gender, LocalDateTime birthDate, LocalDateTime createdAt, LocalDateTime updatedAt) {
+
+
+    public Employees(int employeeID, String firstName, String middleName, String lastName, String email, String userName, String password, String position, String profilePicture, String contactNo, String address, String gender, LocalDateTime birthDate, LocalDateTime createdAt, LocalDateTime updatedAt, int flag, List<Tasks> tasks, List<Assignment> assignments, Salary salary, List<Qualifications> qualifications) {
         this.employeeID = employeeID;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -77,6 +105,11 @@ public class Employees {
         this.birthDate = birthDate;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.flag = flag;
+        this.tasks = tasks;
+        this.assignments = assignments;
+        this.salary = salary;
+        this.qualifications = qualifications;
     }
 
     // Getters and Setters
@@ -200,5 +233,43 @@ public class Employees {
         this.updatedAt = updatedAt;
     }
 
+    public List<Tasks> getTasks() {
+        return tasks;
+    }
 
+    public void setTasks(List<Tasks> tasks) {
+        this.tasks = tasks;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
+
+    public Salary getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Salary salary) {
+        this.salary = salary;
+    }
+
+    public List<Qualifications> getQualifications() {
+        return qualifications;
+    }
+
+    public void setQualifications(List<Qualifications> qualifications) {
+        this.qualifications = qualifications;
+    }
 }

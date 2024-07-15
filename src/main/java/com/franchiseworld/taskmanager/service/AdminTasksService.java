@@ -8,13 +8,14 @@ public interface AdminTasksService {
 
 
 
-    public Tasks saveTasks(Tasks task);
+    public Tasks saveTasks(Tasks task,int projectid,int empid);
 
-    public Tasks updateTasks(Tasks tasks, int id);
+    public Tasks updateTasks(Tasks tasks, int id,int projectId,int employeeId);
 
     public Tasks getTask(int id);
 
     public List<Tasks> getAllTasks();
 
+    public void  deleteTaskById(int id);
 
 }

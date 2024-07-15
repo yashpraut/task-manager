@@ -1,8 +1,11 @@
 package com.franchiseworld.taskmanager.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 public class Projects {
@@ -10,7 +13,7 @@ public class Projects {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ProjectID")
-    private Long projectId;
+    private int projectId;
 
     @Column(name = "ProjectName")
     private String projectName;
@@ -34,10 +37,28 @@ public class Projects {
     private LocalDateTime updatedAt;
 
 
+    private int flag;
+
+    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "projects")
+    @JsonManagedReference(value = "tasks-projects")
+    private List<Tasks> tasks;
+
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "project_head_key")
+    private Employees emp;
+
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "projectID")
+    @JsonManagedReference(value = "projects-assignment")
+    private List<Assignment> assignments;
+
+
+
     public Projects() {
     }
 
-    public Projects(Long projectId, String projectName, String description, LocalDateTime startDate, LocalDateTime endDate, String status, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Projects(int projectId, String projectName, String description, LocalDateTime startDate, LocalDateTime endDate, String status, LocalDateTime createdAt, LocalDateTime updatedAt, int flag, List<Tasks> tasks, Employees emp) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.description = description;
@@ -46,14 +67,18 @@ public class Projects {
         this.status = status;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.flag = flag;
+        this.tasks = tasks;
+        this.emp = emp;
     }
 
     // Getters and Setters
-    public Long getProjectId() {
+
+    public int getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(int projectId) {
         this.projectId = projectId;
     }
 
@@ -112,4 +137,31 @@ public class Projects {
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
     }
+
+
+    public List<Tasks> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Tasks> tasks) {
+        this.tasks = tasks;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public Employees getEmp() {
+        return emp;
+    }
+
+    public void setEmp(Employees emp) {
+        this.emp = emp;
+    }
+
+
 }

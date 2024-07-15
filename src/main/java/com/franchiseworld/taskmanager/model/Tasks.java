@@ -1,6 +1,11 @@
 package com.franchiseworld.taskmanager.model;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 @Entity
@@ -17,8 +22,7 @@ public class Tasks {
     @Column(name = "Description")
     private String description;
 
-    @Column(name = "EmployeeID")
-    private int employeeID;
+
 
     @Column(name = "EndDate")
     private LocalDateTime endDate;
@@ -26,8 +30,7 @@ public class Tasks {
     @Column(name = "EstimatedTime")
     private double estimatedTime;
 
-    @Column(name = "ProjectID")
-    private int projectID;
+
 
     @Column(name = "StartDate")
     private LocalDateTime startDate;
@@ -41,24 +44,40 @@ public class Tasks {
     @Column(name = "UpdatedAt")
     private LocalDateTime updatedAt;
 
+
+
+    @ManyToOne
+    @JsonBackReference(value="employees-tasks")
+    @JoinColumn(name = "EmployeeID")
+    private Employees employees;
+
+    @ManyToOne
+    @JoinColumn(name = "ProjectID")
+    @JsonBackReference(value = "tasks-projects")
+    private Projects projects;
+
+
+    private int flag;
+
     // Constructors
     public Tasks() {
     }
 
-    public Tasks(LocalDateTime createdAt, String description, int employeeID, LocalDateTime endDate, double estimatedTime, int projectID, LocalDateTime startDate, String status, String taskName, LocalDateTime updatedAt) {
+    public Tasks(int taskID, LocalDateTime createdAt, String description, LocalDateTime endDate, double estimatedTime, LocalDateTime startDate, String status, String taskName, LocalDateTime updatedAt, Employees employees, Projects projects, int flag) {
+        this.taskID = taskID;
         this.createdAt = createdAt;
         this.description = description;
-        this.employeeID = employeeID;
         this.endDate = endDate;
         this.estimatedTime = estimatedTime;
-        this.projectID = projectID;
         this.startDate = startDate;
         this.status = status;
         this.taskName = taskName;
         this.updatedAt = updatedAt;
+        this.employees = employees;
+        this.projects = projects;
+        this.flag = flag;
     }
 
-    // Getters and Setters
     public int getTaskID() {
         return taskID;
     }
@@ -83,14 +102,6 @@ public class Tasks {
         this.description = description;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
-    }
-
-    public void setEmployeeID(int employeeID) {
-        this.employeeID = employeeID;
-    }
-
     public LocalDateTime getEndDate() {
         return endDate;
     }
@@ -105,14 +116,6 @@ public class Tasks {
 
     public void setEstimatedTime(double estimatedTime) {
         this.estimatedTime = estimatedTime;
-    }
-
-    public int getProjectID() {
-        return projectID;
-    }
-
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
     }
 
     public LocalDateTime getStartDate() {
@@ -147,21 +150,30 @@ public class Tasks {
         this.updatedAt = updatedAt;
     }
 
-    // ToString method
-    @Override
-    public String toString() {
-        return "Task{" +
-                "taskID=" + taskID +
-                ", createdAt=" + createdAt +
-                ", description='" + description + '\'' +
-                ", employeeID=" + employeeID +
-                ", endDate=" + endDate +
-                ", estimatedTime=" + estimatedTime +
-                ", projectID=" + projectID +
-                ", startDate=" + startDate +
-                ", status='" + status + '\'' +
-                ", taskName='" + taskName + '\'' +
-                ", updatedAt=" + updatedAt +
-                '}';
+
+
+    public Employees getEmployees() {
+        return employees;
     }
+
+    public void setEmployees(Employees employees) {
+        this.employees = employees;
+    }
+
+    public Projects getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Projects projects) {
+        this.projects = projects;
+    }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
 }

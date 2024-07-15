@@ -2,6 +2,7 @@ package com.franchiseworld.taskmanager.serviceImpl;
 
 import com.franchiseworld.taskmanager.customexception.UserNameNotFoundException;
 import com.franchiseworld.taskmanager.model.Employees;
+import com.franchiseworld.taskmanager.modeldto.EmployeeDto;
 import com.franchiseworld.taskmanager.repos.EmployeesRepo;
 import com.franchiseworld.taskmanager.service.AdminEmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AdminEmployeeServiceImpl implements AdminEmployeeService {
-
 
 
     @Autowired
@@ -20,17 +21,21 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
 
     @Override
     public Employees saveEmployee(Employees emp) {
-
+        emp.setFlag(1);
         return this.employeesRepo.save(emp);
     }
 
     @Override
-    public Employees updateEmployee(Employees emp, int id) {
+    public Employees updateEmployee(EmployeeDto emp, int id) {
 
         Employees updateEmployee = this.employeesRepo.findById(id).map(
                 employees -> {
-                    emp.setEmployeeID(employees.getEmployeeID());
-                    return this.employeesRepo.save(emp);
+                    employees.setFirstName(emp.getFirstName());
+                    employees.setMiddleName(emp.getMiddleName());
+                    employees.setLastName(emp.getLastName());
+                    employees.setEmail(emp.getEmailId());
+                    employees.setContactNo(emp.getContactNo());
+                    return this.employeesRepo.save(employees);
                 }
         ).orElseThrow(
                 () -> new UserNameNotFoundException("User NOt Found !!!")
@@ -42,11 +47,24 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
 
     @Override
     public List<Employees> getAllEmployees(  ) {
-        return this.employeesRepo.findAll();
+        return this.employeesRepo.findAll().stream().filter(employees -> employees.getFlag()==1).collect(Collectors.toList());
     }
 
     @Override
     public Employees getEmployee(int id) {
-        return this.employeesRepo.findById(id).orElseThrow(() -> new UserNameNotFoundException("User Not Found !!"));
+        return this.employeesRepo.findById(id).filter(employees -> employees.getFlag()==1).orElseThrow(() -> new UserNameNotFoundException("User Not Found !!"));
     }
+
+    @Override
+    public void deleteEmployee(int id) {
+        this.employeesRepo.findById(id).map(
+                employees -> {
+                    employees.setFlag(0);
+                    this.employeesRepo.save(employees);
+                    return employees;
+                }
+        );
+    }
+
+
 }

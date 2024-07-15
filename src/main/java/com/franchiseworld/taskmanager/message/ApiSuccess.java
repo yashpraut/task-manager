@@ -1,13 +1,11 @@
-package com.franchiseworld.taskmanager.error;
+package com.franchiseworld.taskmanager.message;
 
-
-
-public class ApiError   {
+public class ApiSuccess {
 
     private int statusCode;
     private String message;
 
-    public ApiError(int statusCode, String message) {
+    public ApiSuccess(int statusCode, String message) {
         this.statusCode = statusCode;
         this.message = message;
     }
