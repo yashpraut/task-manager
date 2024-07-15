@@ -5,10 +5,8 @@ import com.franchiseworld.taskmanager.message.ResponseStructure;
 import com.franchiseworld.taskmanager.model.*;
 
 import com.franchiseworld.taskmanager.modeldto.EmployeeDto;
-import com.franchiseworld.taskmanager.service.AdminAssignmentService;
-import com.franchiseworld.taskmanager.service.AdminEmployeeService;
-import com.franchiseworld.taskmanager.service.AdminProjectService;
-import com.franchiseworld.taskmanager.service.AdminTasksService;
+import com.franchiseworld.taskmanager.repos.SalaryRepo;
+import com.franchiseworld.taskmanager.service.*;
 import com.franchiseworld.taskmanager.serviceImpl.AdminAssignmentServiceImpl;
 import com.franchiseworld.taskmanager.serviceImpl.TaskUpdateServiceImpl;
 import jakarta.validation.Valid;
@@ -40,6 +38,13 @@ public class AdminController {
 
     @Autowired
     private AdminAssignmentService adminAssignmentService;
+
+
+    @Autowired
+    private AdminSalaryService salaryService;
+
+    @Autowired
+    private  AdminQualificationsService qualificationsService;
 
 //    Employees Api
 
@@ -144,8 +149,8 @@ public class AdminController {
         return service.deleteTaskUpdate(id);
     }
 
-    @PutMapping("/updateTaskUpdate")
-    public ResponseEntity<ResponseStructure<TaskUpdate>> updateTask(@RequestBody TaskUpdate task, @RequestParam
+    @PutMapping("/updateTaskUpdate/{id}")
+    public ResponseEntity<ResponseStructure<TaskUpdate>> updateTask(@RequestBody TaskUpdate task, @PathVariable("id")
     long id) {
         return service.updateTaskUpdate(task, id);
     }
@@ -184,6 +189,56 @@ public class AdminController {
      return new ResponseEntity<ApiSuccess>(apiSuccess ,HttpStatus.OK);
  }
 
+
+    @PostMapping("/saveSalary")
+    public ResponseEntity<Salary> saveSalary(@RequestBody Salary salary){
+        Salary salary1 = this.salaryService.saveSalary(salary);
+        return new ResponseEntity<Salary>(salary1,HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/getSalary/{sid}")
+    public ResponseEntity<Salary> getSalaryApi(@PathVariable("sid") int id){
+
+        return ResponseEntity.ok(this.salaryService.getSalary(id));
+    }
+    @GetMapping("/getAllSalary")
+    public ResponseEntity<List<Salary>> getAllSalaryApi(){
+
+        return ResponseEntity.ok(this.salaryService.getAllSalary());
+    }
+    @PutMapping("/updateSalary/{id}")
+    public ResponseEntity<Salary> updateAssignment(@RequestBody Salary salary,@PathVariable  int id){
+
+        Salary salary1 = this.salaryService.updateSalary(salary, id);
+        return new ResponseEntity<Salary>( salary1,HttpStatus.OK);
+    }
+
+
+
+    @PostMapping("/saveQualifications")
+    public ResponseEntity<Qualifications> saveQualifications(@RequestBody Qualifications qualifications){
+        Qualifications qualifications1 = this.qualificationsService.saveQualifications(qualifications);
+        return new ResponseEntity<Qualifications>(qualifications1,HttpStatus.CREATED);
+
+    }
+
+    @GetMapping("/getQualification/{qid}")
+    public ResponseEntity<Qualifications> getQualificationsApi(@PathVariable("qid") int id){
+
+        return ResponseEntity.ok(this.qualificationsService.getQualifications(id));
+    }
+    @GetMapping("/getAllQualifications")
+    public ResponseEntity<List<Qualifications>> getAllQualificaytionsApi(){
+
+        return ResponseEntity.ok(this.qualificationsService.getAllQualifications());
+    }
+    @PutMapping("/updateQualification/{id}")
+    public ResponseEntity<Qualifications> updateQualifications(@RequestBody Qualifications qualifications,@PathVariable("id")  int id){
+
+        Qualifications qualifications1 = this.qualificationsService.updateQualifications(qualifications, id);
+        return new ResponseEntity<Qualifications>( qualifications1,HttpStatus.OK);
+    }
 
 
 
