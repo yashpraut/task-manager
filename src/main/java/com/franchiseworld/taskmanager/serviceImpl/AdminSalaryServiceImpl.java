@@ -4,6 +4,7 @@ import com.franchiseworld.taskmanager.model.Employees;
 import com.franchiseworld.taskmanager.model.Salary;
 import com.franchiseworld.taskmanager.repos.EmployeesRepo;
 import com.franchiseworld.taskmanager.repos.SalaryRepo;
+import com.franchiseworld.taskmanager.service.AdminEmployeeService;
 import com.franchiseworld.taskmanager.service.AdminSalaryService;
 import com.franchiseworld.taskmanager.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,15 @@ public class AdminSalaryServiceImpl implements AdminSalaryService {
 
 
     @Autowired
-    private EmployeeService employeeService;
+    private AdminEmployeeService employeeService;
 
 
     @Autowired
     private EmployeesRepo employeesRepo;
 
     @Override
-    public Salary saveSalary(Salary salary) {
-        Employees employeeById = this.employeeService.getEmployeeById(salary.getEmployees().getEmployeeID());
+    public Salary saveSalary(Salary salary,int empid) {
+        Employees employeeById = this.employeeService.getEmployee(empid);
         salary.setEmployees(employeeById);
        return this.salaryRepo.save(salary);
     }

@@ -8,7 +8,7 @@ import java.util.List;
 public interface AdminQualificationsService {
 
 
-    public Qualifications saveQualifications(Qualifications qualifications);
+    public Qualifications saveQualifications(Qualifications qualifications,int empid);
 
     public Qualifications updateQualifications(Qualifications qualifications,int empid);
 

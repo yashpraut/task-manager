@@ -8,7 +8,7 @@ import java.util.List;
 public interface AdminSalaryService {
 
 
-    public Salary saveSalary(Salary salary);
+    public Salary saveSalary(Salary salary,int employeeid);
 
     public Salary updateSalary(Salary salary,int salaryid);
 

@@ -4,6 +4,7 @@ import com.franchiseworld.taskmanager.model.Employees;
 import com.franchiseworld.taskmanager.model.Qualifications;
 import com.franchiseworld.taskmanager.repos.EmployeesRepo;
 import com.franchiseworld.taskmanager.repos.QualificationsRepo;
+import com.franchiseworld.taskmanager.service.AdminEmployeeService;
 import com.franchiseworld.taskmanager.service.AdminQualificationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,15 +19,15 @@ public class AdminQualificationServiceImpl implements AdminQualificationsService
     private QualificationsRepo qualificationsRepo;
 
     @Autowired
-    private EmployeeServiceImpl employeeService;
+    private AdminEmployeeService employeeService;
 
     @Autowired
     private EmployeesRepo employeesRepos;
 
 
     @Override
-    public Qualifications saveQualifications(Qualifications qualifications) {
-        Employees employeeById = this.employeeService.getEmployeeById(qualifications.getEmployees().getEmployeeID());
+    public Qualifications saveQualifications(Qualifications qualifications,int empid) {
+        Employees employeeById = this.employeeService.getEmployee(empid);
         qualifications.setEmployees(employeeById);
 
         return  this.qualificationsRepo.save(qualifications);

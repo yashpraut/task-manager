@@ -49,6 +49,15 @@ public class AdminController {
 //    Employees Api
 
 
+    @GetMapping("/getEmployee/{empid}")
+    public ResponseEntity<Employees> GetEmployeeApi(@PathVariable("empid") int id){
+        return ResponseEntity.ok(this.adminEmployeeService.getEmployee(id));
+    }
+
+    @GetMapping("/getEmployees")
+    public ResponseEntity<List<Employees>> GetAllEmployeeApi(){
+        return ResponseEntity.ok(this.adminEmployeeService.getAllEmployees());
+    }
     @PostMapping("/saveEmployees")
     public ResponseEntity<Employees> saveEmployeeApi(@RequestBody Employees emp){
 
@@ -190,9 +199,9 @@ public class AdminController {
  }
 
 
-    @PostMapping("/saveSalary")
-    public ResponseEntity<Salary> saveSalary(@RequestBody Salary salary){
-        Salary salary1 = this.salaryService.saveSalary(salary);
+    @PostMapping("/saveSalary/{empid}")
+    public ResponseEntity<Salary> saveSalary(@RequestBody Salary salary,@PathVariable("empid") int id){
+        Salary salary1 = this.salaryService.saveSalary(salary,id);
         return new ResponseEntity<Salary>(salary1,HttpStatus.CREATED);
 
     }
@@ -216,9 +225,9 @@ public class AdminController {
 
 
 
-    @PostMapping("/saveQualifications")
-    public ResponseEntity<Qualifications> saveQualifications(@RequestBody Qualifications qualifications){
-        Qualifications qualifications1 = this.qualificationsService.saveQualifications(qualifications);
+    @PostMapping("/saveQualifications/{empid}")
+    public ResponseEntity<Qualifications> saveQualifications(@RequestBody Qualifications qualifications,@PathVariable("empid") int id){
+        Qualifications qualifications1 = this.qualificationsService.saveQualifications(qualifications,id);
         return new ResponseEntity<Qualifications>(qualifications1,HttpStatus.CREATED);
 
     }

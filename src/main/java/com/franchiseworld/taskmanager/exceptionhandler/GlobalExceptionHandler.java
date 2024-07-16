@@ -15,27 +15,27 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {UserNameNotFoundException.class})
-    public ResponseEntity<ApiError> handleException(UserNameNotFoundException ex) {
+    public ResponseEntity<ApiError> handleException1(UserNameNotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {ProjectNotFoundException.class})
-    public ResponseEntity<ApiError> handleExceptionn(ProjectNotFoundException ex) {
+    public ResponseEntity<ApiError> handleExceptionn2(ProjectNotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(value = {TaskNotFoundException.class})
-    public ResponseEntity<ApiError> handleExceptionn(TaskNotFoundException ex) {
+    public ResponseEntity<ApiError> handleExceptionn3(TaskNotFoundException ex) {
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND.value(), ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(value = {SQLIntegrityConstraintViolationException.class})
-    public ResponseEntity<ApiError> handleExceptionn(SQLIntegrityConstraintViolationException ex) {
-        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), ex.getMessage());
-        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    @ExceptionHandler(value = {SQLIntegrityConstraintViolationException.class, DataIntegrityViolationException.class})
+    public ResponseEntity<ApiError> handleExceptionn4(SQLIntegrityConstraintViolationException ex) {
+        ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
+        return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
