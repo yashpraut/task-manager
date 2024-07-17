@@ -4,10 +4,14 @@ import com.franchiseworld.taskmanager.customexception.ProjectNotFoundException;
 import com.franchiseworld.taskmanager.customexception.TaskNotFoundException;
 import com.franchiseworld.taskmanager.customexception.UserNameNotFoundException;
 import com.franchiseworld.taskmanager.message.ApiError;
+import jakarta.validation.UnexpectedTypeException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 
@@ -34,16 +38,23 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = {SQLIntegrityConstraintViolationException.class, DataIntegrityViolationException.class})
     public ResponseEntity<ApiError> handleExceptionn4(SQLIntegrityConstraintViolationException ex) {
+        ApiError apiError = new ApiError(HttpStatus.CONFLICT.value(), ex.getLocalizedMessage() );
+        return new ResponseEntity<>(apiError, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(value = {UnexpectedTypeException.class})
+    public ResponseEntity<ApiError> handleExceptionn5(UnexpectedTypeException ex) {
         ApiError apiError = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR.value(), ex.getMessage());
         return new ResponseEntity<>(apiError, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> handleAllExceptions(Exception ex) {
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(value = {MethodArgumentNotValidException.class})
+    protected ResponseEntity<ApiError> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST.value(), ex.getBindingResult().getFieldError().getDefaultMessage());
+        return new ResponseEntity<ApiError>(apiError, HttpStatus.BAD_REQUEST);
     }
+
+
+    
 }
 

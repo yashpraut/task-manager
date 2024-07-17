@@ -2,6 +2,7 @@ package com.franchiseworld.taskmanager.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Salary {
@@ -9,7 +10,10 @@ public class Salary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int salaryID;
-    private double salary;
+
+
+    @NotBlank
+    private String salary;
     @OneToOne
     @JsonBackReference(value = "emp-salary")
     private  Employees employees;
@@ -17,7 +21,7 @@ public class Salary {
     public Salary() {
     }
 
-    public Salary(int salaryID, double salary, Employees employees) {
+    public Salary(int salaryID, String salary, Employees employees) {
         this.salaryID = salaryID;
         this.salary = salary;
         this.employees = employees;
@@ -31,11 +35,11 @@ public class Salary {
         this.salaryID = salaryID;
     }
 
-    public double getSalary() {
+    public String getSalary() {
         return salary;
     }
 
-    public void setSalary(double salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
 

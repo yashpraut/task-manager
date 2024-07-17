@@ -15,4 +15,7 @@ public interface AdminQualificationsService {
     public Qualifications getQualifications(int id);
 
     public List<Qualifications> getAllQualifications();
+
+    public void deleteQualifications(int id);
+
 }

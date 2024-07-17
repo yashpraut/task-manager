@@ -16,5 +16,10 @@ public interface AdminProjectService {
 
     public void  deleteProjectById(int id);
 
+    public void blockProject(int id);
+
+    public void unblockProject(int id);
+
+
 
 }

@@ -3,6 +3,7 @@ package com.franchiseworld.taskmanager.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 public class Assignment {
@@ -13,15 +14,27 @@ public class Assignment {
 
     @ManyToOne
     @JsonBackReference(value = "employess-assignment")
+    @NotBlank
     private Employees employeeID;
     @ManyToOne
     @JsonBackReference(value = "projects-assignment")
+    @NotBlank
     private Projects projectID;
+
+    @NotBlank
     private String remark;
+
+    @NotBlank
     private String remarkDescription;
+
+    @NotBlank
     private int taskID;
+
+    @NotBlank
     private String workStatus;
 
+
+    @NotBlank
     private boolean assignflag;
 
     // Constructor

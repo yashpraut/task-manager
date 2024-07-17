@@ -1,6 +1,7 @@
 package com.franchiseworld.taskmanager.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -10,19 +11,31 @@ public class TaskUpdate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long updateID;
+
+    @NotBlank
     private String updateDescription;
+
+    @NotBlank
     private String status;
+    @NotBlank
     private LocalDateTime startedAt;
+
+    @NotBlank
     private LocalDateTime endedAt;
+
+    @NotBlank
     private Date updateDate;
 
     @ManyToOne
+    @NotBlank
     private Tasks task;
 
     @ManyToOne
+    @NotBlank
     private Employees updatedBy;
 
     @ManyToOne
+    @NotBlank
     private Projects project;
 
     public TaskUpdate(Long updateID, String updateDescription, String status, LocalDateTime startedAt, LocalDateTime endedAt, Date updateDate, Tasks task, Employees updatedBy, Projects project) {

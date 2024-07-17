@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 public class Tasks {
@@ -17,31 +18,39 @@ public class Tasks {
     private int taskID;
 
     @Column(name = "CreatedAt")
+    @NotNull(message = "createdAt Date  Blank")
     private LocalDateTime createdAt;
 
     @Column(name = "Description")
+    @NotBlank(message = "Description Blank")
     private String description;
 
 
 
     @Column(name = "EndDate")
+    @NotNull(message = "endDate Field Blank")
     private LocalDateTime endDate;
 
     @Column(name = "EstimatedTime")
+    @Min(value = 1,message = "min value greater (>) than 1")
     private double estimatedTime;
 
 
 
     @Column(name = "StartDate")
+    @NotNull(message = "Start Date Not Blank")
     private LocalDateTime startDate;
 
     @Column(name = "Status")
+    @NotBlank(message = "status ot blank !!!")
     private String status;
 
     @Column(name = "TaskName")
+    @NotBlank
     private String taskName;
 
     @Column(name = "UpdatedAt")
+    @NotNull(message = "UpdateAt not Blank")
     private LocalDateTime updatedAt;
 
 
@@ -55,6 +64,8 @@ public class Tasks {
     @JoinColumn(name = "ProjectID")
     @JsonBackReference(value = "tasks-projects")
     private Projects projects;
+
+
 
 
     private int flag;

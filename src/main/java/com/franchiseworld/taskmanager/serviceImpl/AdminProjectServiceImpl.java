@@ -5,6 +5,7 @@ import com.franchiseworld.taskmanager.customexception.TaskNotFoundException;
 import com.franchiseworld.taskmanager.model.Employees;
 import com.franchiseworld.taskmanager.model.Projects;
 import com.franchiseworld.taskmanager.repos.ProjectsRepo;
+import com.franchiseworld.taskmanager.service.AdminEmployeeService;
 import com.franchiseworld.taskmanager.service.AdminProjectService;
 import com.franchiseworld.taskmanager.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,19 +24,20 @@ public class AdminProjectServiceImpl implements AdminProjectService {
     private ProjectsRepo projectsRepo;
 
     @Autowired
-    private EmployeeService employeeService;
+    private AdminEmployeeService employeeService;
 
     @Override
     public Projects saveProjects(Projects projects,int id) {
 
-        Employees employeeById = this.employeeService.getEmployeeById(projects.getEmp().getEmployeeID());
+        Employees employeeById = this.employeeService.getEmployee(id);
 
         projects.setStartDate(LocalDateTime.now());
         projects.setUpdatedAt(LocalDateTime.now());
         projects.setCreatedAt(LocalDateTime.now());
         projects.setEndDate(LocalDateTime.now());
         projects.setEmp(employeeById);
-        projects.setFlag(1);
+        projects.setFlag(true);
+        projects.setProjectblock(false);
         return this.projectsRepo.save(projects);
     }
 
@@ -55,29 +57,49 @@ public class AdminProjectServiceImpl implements AdminProjectService {
 
     @Override
     public Projects getProjects(int id) {
-       return this.projectsRepo.findById(id).filter(e->e.getFlag()==1).orElseThrow(() -> new ProjectNotFoundException("Project Not Found Exception!!!"));
+       return this.projectsRepo.findById(id).filter(e->e.isFlag()==true).orElseThrow(() -> new ProjectNotFoundException("Project Not Found Exception!!!"));
 
     }
 
     @Override
     public List<Projects> getAllProject() {
-        return this.projectsRepo.findAll().stream().filter(project -> project.getFlag()==1).collect(Collectors.toList());
+        return this.projectsRepo.findAll().stream().filter(project -> project.isFlag()==true).collect(Collectors.toList());
     }
 
     @Override
     public void deleteProjectById(int id) {
         this.projectsRepo.findById(id).map(
                 projects -> {
-                    projects.setFlag(0);
+                    projects.setFlag(false);
                     this.projectsRepo.save(projects);
                     return projects ;
                 }
-        ).orElseThrow(() -> new TaskNotFoundException("Task Not Found !!"));
+        ).orElseThrow(() -> new TaskNotFoundException("Project Not Found !!"));
 
 
     }
 
+    @Override
+    public void blockProject(int id) {
+        Projects projects = this.projectsRepo.findById(id).map(p -> {
+            p.setProjectId(p.getProjectId());
+            p.setProjectblock(true);
+            return p;
+        }).orElseThrow(() -> new ProjectNotFoundException("Project Not Found Exception!!!"));
 
+        this.projectsRepo.save(projects);
+    }
+
+    @Override
+    public void unblockProject(int id) {
+        Projects projects = this.projectsRepo.findById(id).map(p -> {
+            p.setProjectId(p.getProjectId());
+            p.setProjectblock(false);
+            return p;
+        }).orElseThrow(() -> new ProjectNotFoundException("Project Not Found Exception!!!"));
+
+        this.projectsRepo.save(projects);
+    }
 
 
 }

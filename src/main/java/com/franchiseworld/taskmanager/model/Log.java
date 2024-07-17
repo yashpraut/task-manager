@@ -2,6 +2,8 @@ package com.franchiseworld.taskmanager.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 
 
 //import javax.persistence.*;
@@ -15,19 +17,24 @@ public class Log {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "LogID")
+    @NotBlank
     private Long logID;
 
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "EmployeeID")
+    @NotEmpty
     private Employees employee;
 
     @Column(name = "LogDate")
+    @NotBlank
     private LocalDate logDate;
 
     @Column(name = "LogInTime")
+    @NotEmpty
     private LocalDateTime logInTime;
 
     @Column(name = "LogOutTime")
+    @NotEmpty
     private LocalDateTime logOutTime;
 
     //no need to getter setter

@@ -2,6 +2,8 @@ package com.franchiseworld.taskmanager.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -15,59 +17,78 @@ public class Employees {
     @Column(name = "EmployeeID")
     private int employeeID;
 
-    @Column(name = "FirstName")
+    @Column(name = "FirstName",nullable = false)
+    @NotBlank
     private String firstName;
 
-    @Column(name = "MiddleName")
+    @Column(name = "MiddleName",nullable = false)
+    @NotBlank
     private String middleName;
 
-    @Column(name = "LastName")
+    @Column(name = "LastName",nullable = false)
+    @NotBlank
     private String lastName;
 
-    @Column(name = "Email",unique = true)
+    @Column(name = "Email",unique = true,nullable = false)
+    @NotBlank
+    @Email(regexp = "^[a-zA-Z0-9._%+-]+@gmail\\.com$")
     private String email;
 
-    @Column(name = "UserName",unique = true)
+    @Column(name = "UserName",unique = true,nullable = false)
+    @NotBlank
     private String userName;
 
-    @Column(name = "Password")
+    @Column(name = "Password",nullable = false)
+    @NotBlank
     private String password;
 
-    @Column(name = "Position")
+    @Column(name = "Position",nullable = false)
+    @NotBlank
     private String position;
 
-    @Column(name = "ProfilePicture")
+    @Column(name = "ProfilePicture",nullable = false)
+    @NotBlank
     private String profilePicture;
 
-    @Column(name = "Contact_No",unique = true)
+    @Column(name = "Contact_No",unique = true,nullable = false)
+    @NotBlank
+    @Size(min = 10)
     private String contactNo;
 
-    @Column(name = "Address")
+    @Column(name = "Address",nullable = false)
+    @NotBlank
+    @Size(max = 210)
     private String address;
 
-    @Column(name = "Gender")
+    @Column(name = "Gender",nullable = false)
+    @NotBlank
     private String gender;
 
     @Column(name = "BirthDate")
+    @NotNull
     private LocalDateTime birthDate;
 
     @Column(name = "CreatedAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    @NotNull
     private LocalDateTime createdAt;
 
     @Column(name = "UpdatedAt", columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    @NotNull
     private LocalDateTime updatedAt;
 
-    private int flag;
+
+
+    private boolean flag;
 
 
 
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "employees")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "employees")
     @JsonManagedReference(value="employees-tasks")
     private List<Tasks> tasks;
 
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "employeeID")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "employeeID")
     @JsonManagedReference(value = "employess-assignment")
     private List<Assignment> assignments;
 
@@ -77,7 +98,7 @@ public class Employees {
     private Salary salary;
 
 
-    @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "employees")
+    @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "employees",orphanRemoval = true)
     @JsonManagedReference(value = "emp-qualifications")
     private List<Qualifications> qualifications;
 
@@ -89,7 +110,7 @@ public class Employees {
     // Constructor with all fields
 
 
-    public Employees(int employeeID, String firstName, String middleName, String lastName, String email, String userName, String password, String position, String profilePicture, String contactNo, String address, String gender, LocalDateTime birthDate, LocalDateTime createdAt, LocalDateTime updatedAt, int flag, List<Tasks> tasks, List<Assignment> assignments, Salary salary, List<Qualifications> qualifications) {
+    public Employees(int employeeID, String firstName, String middleName, String lastName, String email, String userName, String password, String position, String profilePicture, String contactNo, String address, String gender, LocalDateTime birthDate, LocalDateTime createdAt, LocalDateTime updatedAt, boolean flag, List<Tasks> tasks, List<Assignment> assignments, Salary salary, List<Qualifications> qualifications) {
         this.employeeID = employeeID;
         this.firstName = firstName;
         this.middleName = middleName;
@@ -241,11 +262,11 @@ public class Employees {
         this.tasks = tasks;
     }
 
-    public int getFlag() {
+    public boolean getFlag() {
         return flag;
     }
 
-    public void setFlag(int flag) {
+    public void setFlag(boolean flag) {
         this.flag = flag;
     }
 

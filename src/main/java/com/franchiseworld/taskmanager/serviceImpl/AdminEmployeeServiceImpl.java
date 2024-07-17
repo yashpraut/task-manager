@@ -21,7 +21,7 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
 
     @Override
     public Employees saveEmployee(Employees emp) {
-        emp.setFlag(1);
+        emp.setFlag(true);
         return this.employeesRepo.save(emp);
     }
 
@@ -47,19 +47,19 @@ public class AdminEmployeeServiceImpl implements AdminEmployeeService {
 
     @Override
     public List<Employees> getAllEmployees(  ) {
-        return this.employeesRepo.findAll().stream().filter(employees -> employees.getFlag()==1).collect(Collectors.toList());
+        return this.employeesRepo.findAll().stream().filter(employees -> employees.getFlag()==true).collect(Collectors.toList());
     }
 
     @Override
     public Employees getEmployee(int id) {
-        return this.employeesRepo.findById(id).filter(employees -> employees.getFlag()==1).orElseThrow(() -> new UserNameNotFoundException("User Not Found !!"));
+        return this.employeesRepo.findById(id).filter(employees -> employees.getFlag()==true).orElseThrow(() -> new UserNameNotFoundException("User Not Found !!"));
     }
 
     @Override
     public void deleteEmployee(int id) {
         this.employeesRepo.findById(id).map(
                 employees -> {
-                    employees.setFlag(0);
+                    employees.setFlag(false);
                     this.employeesRepo.save(employees);
                     return employees;
                 }

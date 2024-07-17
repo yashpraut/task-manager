@@ -13,6 +13,8 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -59,7 +61,7 @@ public class AdminController {
         return ResponseEntity.ok(this.adminEmployeeService.getAllEmployees());
     }
     @PostMapping("/saveEmployees")
-    public ResponseEntity<Employees> saveEmployeeApi(@RequestBody Employees emp){
+    public ResponseEntity<Employees> saveEmployeeApi(@Valid @RequestBody Employees emp){
 
         return new ResponseEntity<>(this.adminEmployeeService.saveEmployee(emp),HttpStatus.CREATED);
     }
@@ -73,8 +75,8 @@ public class AdminController {
 
 //    Projects
 
-    @PostMapping("/saveProjects/{id}")
-    public ResponseEntity<Projects> saveProjectsApi(@RequestBody Projects projects,@PathVariable("id") int id){
+    @PostMapping("/saveProjects/{empid}")
+    public ResponseEntity<Projects> saveProjectsApi(@Valid @RequestBody Projects projects,@PathVariable("empid") int id){
 
         return new ResponseEntity<>(this.adminProjectService.saveProjects(projects,id),HttpStatus.CREATED);
     }
@@ -102,10 +104,22 @@ public class AdminController {
     }
 
 
+    @PutMapping("/blockProjects/{id}")
+    public ResponseEntity<ApiSuccess> blockProjectById(@PathVariable("id")  int id){
+        this.adminProjectService.blockProject(id);
+        ApiSuccess apiSuccess = new ApiSuccess(HttpStatus.OK.value(), "Project Block !!");
+        return new ResponseEntity<>(apiSuccess,HttpStatus.OK);
+    }
+    @PutMapping("/unblockProjects/{id}")
+    public ResponseEntity<ApiSuccess> unblockProjectById(@PathVariable("id")  int id){
+        this.adminProjectService.unblockProject(id);
+        ApiSuccess apiSuccess = new ApiSuccess(HttpStatus.OK.value(), "Project UnBlock !!");
+        return new ResponseEntity<>(apiSuccess,HttpStatus.OK);
+    }
 
 
     @PostMapping(value = "/saveTasks/{projectid}/{empid}")
-    public ResponseEntity<Tasks> saveTasksApi(@RequestBody Tasks tasks,@PathVariable("projectid") int projectid,@PathVariable("empid") int empid){
+    public ResponseEntity<Tasks> saveTasksApi(@Valid @RequestBody Tasks tasks,@PathVariable("projectid") int projectid,@PathVariable("empid") int empid){
 
         return new ResponseEntity<>(this.adminTasksService.saveTasks(tasks,projectid,empid),HttpStatus.CREATED);
     }
@@ -132,6 +146,7 @@ public class AdminController {
         ApiSuccess apiSuccess = new ApiSuccess(HttpStatus.OK.value(), "Task Delete Succesfully !!");
         return new ResponseEntity<>(apiSuccess,HttpStatus.OK);
     }
+
 
 
 
@@ -167,7 +182,7 @@ public class AdminController {
 
 
     @PostMapping("/saveAssignment")
-    public ResponseEntity<Assignment> saveAssignment(@RequestBody Assignment assignment){
+    public ResponseEntity<Assignment> saveAssignment(@Valid @RequestBody Assignment assignment){
         Assignment assignment1 = this.adminAssignmentService.saveAssignment(assignment);
         return new ResponseEntity<Assignment>( assignment1,HttpStatus.CREATED);
 
@@ -200,7 +215,7 @@ public class AdminController {
 
 
     @PostMapping("/saveSalary/{empid}")
-    public ResponseEntity<Salary> saveSalary(@RequestBody Salary salary,@PathVariable("empid") int id){
+    public ResponseEntity<Salary> saveSalary(@Valid @RequestBody Salary salary,@PathVariable("empid") int id){
         Salary salary1 = this.salaryService.saveSalary(salary,id);
         return new ResponseEntity<Salary>(salary1,HttpStatus.CREATED);
 
@@ -226,9 +241,9 @@ public class AdminController {
 
 
     @PostMapping("/saveQualifications/{empid}")
-    public ResponseEntity<Qualifications> saveQualifications(@RequestBody Qualifications qualifications,@PathVariable("empid") int id){
+    public ResponseEntity<Qualifications> saveQualifications(@Valid @RequestBody Qualifications qualifications, @PathVariable("empid") int id, BindingResult result){
         Qualifications qualifications1 = this.qualificationsService.saveQualifications(qualifications,id);
-        return new ResponseEntity<Qualifications>(qualifications1,HttpStatus.CREATED);
+       return new ResponseEntity<Qualifications>(qualifications1,HttpStatus.CREATED);
 
     }
 
@@ -249,6 +264,14 @@ public class AdminController {
         return new ResponseEntity<Qualifications>( qualifications1,HttpStatus.OK);
     }
 
+    @DeleteMapping("/deleteQualifications/{id}")
+    @Transactional
+    public ResponseEntity<ApiSuccess> updateQualifications(@PathVariable("id")  int id){
+        ApiSuccess apiSuccess = new ApiSuccess(HttpStatus.OK.value(), "Delete Qualifications Succesfully !!");
+
+        this.qualificationsService.deleteQualifications(id);
+        return new ResponseEntity<>(apiSuccess,HttpStatus.OK);
+    }
 
 
 }

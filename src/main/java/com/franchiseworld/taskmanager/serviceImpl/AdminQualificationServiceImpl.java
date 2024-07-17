@@ -8,6 +8,7 @@ import com.franchiseworld.taskmanager.service.AdminEmployeeService;
 import com.franchiseworld.taskmanager.service.AdminQualificationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class AdminQualificationServiceImpl implements AdminQualificationsService
 
     @Override
     public Qualifications saveQualifications(Qualifications qualifications,int empid) {
+
         Employees employeeById = this.employeeService.getEmployee(empid);
         qualifications.setEmployees(employeeById);
 
@@ -53,4 +55,17 @@ public class AdminQualificationServiceImpl implements AdminQualificationsService
     public List<Qualifications> getAllQualifications() {
         return this.qualificationsRepo.findAll();
     }
-}
+
+    @Override
+    public void deleteQualifications(int id) {
+        this.qualificationsRepo.findById(id).map(
+                q -> {
+
+
+                    this.qualificationsRepo.deleteById(q.getQualificationID());
+                    return q;
+                }
+        ).orElseThrow(() -> new RuntimeException("ID Not Found !!!"));
+    }
+    }
+

@@ -2,6 +2,7 @@ package com.franchiseworld.taskmanager.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 
 @Entity
@@ -12,10 +13,24 @@ public class Qualifications {
       @GeneratedValue(strategy = GenerationType.IDENTITY)
         private int qualificationID;
 
+
+       @NotBlank(message = "Qualification Field  Blank")
         private String qualificationType;
+
+       @NotBlank(message = "institution Field  Blank")
         private String institution;
-        private int yearOfCompletion;
-        private double percentage;
+
+
+
+       @Min(value = 2000,message = "Year > 2000")
+       @Max(value=2999,message="Year < 2100")
+       @NotNull(message = "YearOfCompletion Field Value Blank")
+        private Integer yearOfCompletion;
+
+         @Min(value = 10,message = "Min Value Not Smaller Than 10")
+         @Max(value = 100,message = "Value Not Greater Than 100")
+         @NotNull(message = "Percentage Field Value Blank")
+        private Double percentage;
 
 
         @ManyToOne
@@ -25,7 +40,7 @@ public class Qualifications {
     public Qualifications() {
     }
 
-    public Qualifications(int qualificationID, String qualificationType, String institution, int yearOfCompletion, double percentage, Employees employees) {
+    public Qualifications(int qualificationID, String qualificationType, String institution, Integer yearOfCompletion, Double percentage, Employees employees) {
         this.qualificationID = qualificationID;
         this.qualificationType = qualificationType;
         this.institution = institution;
@@ -58,19 +73,19 @@ public class Qualifications {
         this.institution = institution;
     }
 
-    public int getYearOfCompletion() {
+    public Integer getYearOfCompletion() {
         return yearOfCompletion;
     }
 
-    public void setYearOfCompletion(int yearOfCompletion) {
+    public void setYearOfCompletion(Integer yearOfCompletion) {
         this.yearOfCompletion = yearOfCompletion;
     }
 
-    public double getPercentage() {
+    public Double getPercentage() {
         return percentage;
     }
 
-    public void setPercentage(double percentage) {
+    public void setPercentage(Double percentage) {
         this.percentage = percentage;
     }
 

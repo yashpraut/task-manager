@@ -3,6 +3,8 @@ package com.franchiseworld.taskmanager.model;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,28 +18,37 @@ public class Projects {
     private int projectId;
 
     @Column(name = "ProjectName")
+    @NotBlank
     private String projectName;
 
     @Column(name = "Description")
+    @NotBlank
     private String description;
 
     @Column(name = "StartDate")
+    @NotNull
     private LocalDateTime startDate;
 
     @Column(name = "EndDate")
+    @NotNull
     private LocalDateTime endDate;
 
     @Column(name = "Status")
+    @NotBlank
     private String status;
 
     @Column(name = "CreatedAt")
+    @NotNull(message = "createdAt ")
     private LocalDateTime createdAt;
 
     @Column(name = "UpdatedAt")
+    @NotNull(message = "UpdateAt Field Value Blank")
     private LocalDateTime updatedAt;
 
 
-    private int flag;
+    private boolean flag;
+
+    private boolean projectblock;
 
     @OneToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL,mappedBy = "projects")
     @JsonManagedReference(value = "tasks-projects")
@@ -58,7 +69,7 @@ public class Projects {
     public Projects() {
     }
 
-    public Projects(int projectId, String projectName, String description, LocalDateTime startDate, LocalDateTime endDate, String status, LocalDateTime createdAt, LocalDateTime updatedAt, int flag, List<Tasks> tasks, Employees emp) {
+    public Projects(int projectId, String projectName, String description, LocalDateTime startDate, LocalDateTime endDate, String status, LocalDateTime createdAt, LocalDateTime updatedAt, boolean flag, boolean projectblock, List<Tasks> tasks, Employees emp, List<Assignment> assignments) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.description = description;
@@ -68,8 +79,10 @@ public class Projects {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.flag = flag;
+        this.projectblock = projectblock;
         this.tasks = tasks;
         this.emp = emp;
+        this.assignments = assignments;
     }
 
     // Getters and Setters
@@ -147,14 +160,6 @@ public class Projects {
         this.tasks = tasks;
     }
 
-    public int getFlag() {
-        return flag;
-    }
-
-    public void setFlag(int flag) {
-        this.flag = flag;
-    }
-
     public Employees getEmp() {
         return emp;
     }
@@ -163,5 +168,27 @@ public class Projects {
         this.emp = emp;
     }
 
+    public boolean isFlag() {
+        return flag;
+    }
 
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public boolean isProjectblock() {
+        return projectblock;
+    }
+
+    public void setProjectblock(boolean projectblock) {
+        this.projectblock = projectblock;
+    }
+
+    public List<Assignment> getAssignments() {
+        return assignments;
+    }
+
+    public void setAssignments(List<Assignment> assignments) {
+        this.assignments = assignments;
+    }
 }
